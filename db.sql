@@ -21,11 +21,20 @@ CREATE TABLE wallet (
 
 -- Transactions table
 CREATE TABLE transactions (
-    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    transaction_id VARCHAR(255),
     wallet_id INT,
     amount DECIMAL(10, 2) NOT NULL,
-    transaction_type ENUM('credit', 'debit') NOT NULL,
+    transaction_type VARCHAR(255) NOT NULL,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    transaction_desc VARCHAR(255),
+    sender VARCHAR(255),
     recipient VARCHAR(255),
     FOREIGN KEY (wallet_id) REFERENCES wallet(wallet_id)
+);
+
+-- Idempotency table
+CREATE TABLE idempotency (
+    id VARCHAR(255) unique NOT NULL,
+    trans_id VARCHAR(255) unique NOT NULL
 );

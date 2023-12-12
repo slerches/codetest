@@ -19,3 +19,25 @@ export const getWalletByUserID = async (user_id: number) => {
     }
   }
 }
+
+export const getWalletByUsername = async (username: string) => {
+  const rs: any = await dbpool.query("SELECT * FROM wallet where username = ?", [username]);
+
+  if (rs) {
+    return {
+      data: rs[0]
+    }
+  } else {
+    return {
+      data: []
+    }
+  }
+}
+
+export const updateWallet = async (wallet_id: number, amount: number) => {
+  const rs = await dbpool.query("UPDATE wallet SET balance = balance + ? WHERE wallet_id = ?", [amount, wallet_id])
+}
+
+export const redrawFromWallet = async (wallet_id: number, amount: number) => {
+  const rs = await dbpool.query("UPDATE wallet SET balance = balance - ? WHERE wallet_id = ?", [amount, wallet_id])
+}

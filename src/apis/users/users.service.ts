@@ -29,11 +29,20 @@ export const updateSessionToken = async (user_id: number, sessionToken: string) 
   const rs = await dbpool.query("UPDATE users SET s_token = ? WHERE user_id = ?", [sessionToken, user_id]);
 }
 
-export const getUserBySessionToken = async (sessionToken: String) => {
+export const getUserBySessionToken = async (sessionToken: string) => {
   const rs: any = await dbpool.query("SELECT * FROM users WHERE s_token = ?", [sessionToken]);
   if (rs[0].length <= 0) {
     return null
   }
 
-  return rs[0][0].s_token;
+  return rs[0][0];
+}
+
+export const getUserByUsername = async (username: string) => {
+  const rs: any = await dbpool.query("SELECT * FROM users WHERE username = ?", [username]);
+  if (rs[0].length <= 0) {
+    return null
+  }
+
+  return rs[0][0];
 }
