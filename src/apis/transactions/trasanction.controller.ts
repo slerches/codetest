@@ -14,6 +14,8 @@ export const Transact = async (req: express.Request, res: express.Response) => {
     }
     const idem = await verifyIdempotency(idempotent_key, transid);
     if (idem?.error) {
+      res.set('idempotent-key', idempotent_key);
+      res.set('idempotent_replayed', 'true');
       return res.send({
         "status": "success",
         "available": trans_type == 'deposit' ? +idem?.balance - amount : +idem?.balance + amount,
@@ -54,6 +56,7 @@ export const Transact = async (req: express.Request, res: express.Response) => {
       return res.status(400).send('Invalid operation');
     }
     await transact(wallet_id, amount, userInfo.username, trans_type, trans_description, wallet_id, transid);
+    res.set('idempotent-key', idempotent_key);
     res.json({ status: "success", available: +wallet.data[0].balance, current: +temp_amount });
     SendSMS("number", "Your account credited with");//Dummy
   } catch (e: any) {
